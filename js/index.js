@@ -4,6 +4,10 @@ const charLeftLabel = document.querySelector("#charLeft");
 const maxCharacters = 30;
 charLeftLabel.textContent = maxCharacters;
 const setMaxLength = (t) => t.setAttribute("maxlength", maxCharacters);
+const addClass = (e, className) => e.classList.add(className);
+const removeClass = (e, className) => e.classList.remove(className);
+const validateMaxLength = ({t , maxLength}) => 
+t.getAttribute("maxlength").length != maxLength ? setMaxLength(t) : "";
 setMaxLength(textarea);
 
 const meter = new Map([
@@ -15,14 +19,9 @@ const colours = {
   warning: "text-warning",
   danger: "text-danger",
 };
-const addClass = (e, className) => e.classList.add(className);
-const removeClass = (e, className) => e.classList.remove(className);
-const validateMaxLength = (t) =>
-  t.getAttribute("maxlength").length != maxCharacters ? setMaxLength(t) : "";
+
 
 const countCharacters = (counter) => {
-  validateMaxLength(textarea);
-
   const currentTotal = maxCharacters - counter.target.value.length;
   charLeftLabel.textContent = currentTotal;
   currentTotal <= meter.get("medium")
@@ -34,3 +33,5 @@ const countCharacters = (counter) => {
 };
 
 textarea.addEventListener("input", (e) => countCharacters(e));
+textarea.addEventListener("focus", (e) => validateMaxLength({t: textarea, maxLength: maxCharacters}));
+
