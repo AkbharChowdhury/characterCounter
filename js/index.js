@@ -3,11 +3,15 @@ const counterLabel = document.querySelector("#counterLabel");
 const charLeftLabel = document.querySelector("#charLeft");
 const maxCharacters = 30;
 charLeftLabel.textContent = maxCharacters;
-const setMaxLength = (t) => t.setAttribute("maxlength", maxCharacters);
+const setMaxLength = (textarea) =>
+  textarea.setAttribute("maxlength", maxCharacters);
 const addClass = (e, className) => e.classList.add(className);
 const removeClass = (e, className) => e.classList.remove(className);
-const validateMaxLength = ({ t, maxLength }) =>
-  t.getAttribute("maxlength").length != maxLength ? setMaxLength(t) : "";
+const validateMaxLength = (textarea, maxLength) =>
+  textarea.getAttribute("maxlength").length !== maxLength
+    ? setMaxLength(textarea)
+    : "";
+
 setMaxLength(textarea);
 
 const meter = new Map([
@@ -15,13 +19,15 @@ const meter = new Map([
   ["low", 10],
 ]);
 
-const colours = {
+const colours = Object.freeze({
   warning: "text-warning",
   danger: "text-danger",
-};
+});
 
 const countCharacters = (counter) => {
-  const currentTotal = maxCharacters - counter.target.value.length;
+  const userInput = counter.target.value;
+  const currentTotal = maxCharacters - userInput.length;
+
   charLeftLabel.textContent = currentTotal;
   currentTotal <= meter.get("medium")
     ? addClass(counterLabel, colours.warning)
@@ -33,5 +39,5 @@ const countCharacters = (counter) => {
 
 textarea.addEventListener("input", (e) => countCharacters(e));
 textarea.addEventListener("focus", () =>
-  validateMaxLength({ t: textarea, maxLength: maxCharacters })
+  validateMaxLength(textarea, maxCharacters)
 );
